@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Button } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditProfile = () => {
   const { id } = useParams();
-
+  const navigate=useNavigate()
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -50,11 +50,7 @@ const EditProfile = () => {
       );
       if (response.ok) {
         alert("Profile updated successfully");
-        setUserData({
-          name: "",
-          email: "",
-          password: "",
-        });
+        navigate(`/profile/${id}`)
       } else {
         console.error("Error updating user");
       }
@@ -112,4 +108,5 @@ const EditProfile = () => {
 };
 
 export default EditProfile;
+
 
