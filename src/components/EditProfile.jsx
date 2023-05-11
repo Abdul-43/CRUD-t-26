@@ -1,51 +1,70 @@
-import React, { useState,useEffect } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from "react";
+import { Container, Form, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 
-const EditProfile = ({ match }) => {
-  const userId = match.params.id;
+const EditProfile = () => {
+  const { id } = useParams();
 
   const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    password: ''
+    name: "",
+    email: "",
+    password: "",
   });
+
   useEffect(() => {
-    // Fetch user data from API or data source
+
     const fetchUserData = async () => {
       try {
-        // Make an API request to fetch user data
-        const response = await fetch(`/api/users/${userId}`);
+        const response = await fetch(
+          `https://645cf892250a246ae313d573.mockapi.io/api/users/user/${id}`
+        );
         const data = await response.json();
-        setUserData(data); // Set the fetched user data
+        setUserData(data); 
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
-
     fetchUserData();
-  }, [userId]);
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission to update the user's profile
-    console.log(userData);
-    // Reset form fields
-    setUserData({
-      name: '',
-      email: '',
-      password: ''
-    });
+    try {
+      const response = await fetch(
+        `https://645cf892250a246ae313d573.mockapi.io/api/users/user/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
+      if (response.ok) {
+        alert("Profile updated successfully");
+        setUserData({
+          name: "",
+          email: "",
+          password: "",
+        });
+      } else {
+        console.error("Error updating user");
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
   };
 
   return (
-    <Container className='mt-0'>
+    <Container className="mt-0">
       <h1>Edit Profile</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formName">
@@ -56,7 +75,7 @@ const EditProfile = ({ match }) => {
             value={userData.name}
             onChange={handleChange}
             required
-            style={{width:"400px"}}
+            style={{ width: "400px" }}
           />
         </Form.Group>
 
@@ -68,7 +87,7 @@ const EditProfile = ({ match }) => {
             value={userData.email}
             onChange={handleChange}
             required
-            style={{width:"400px"}}
+            style={{ width: "400px" }}
           />
         </Form.Group>
 
@@ -80,14 +99,17 @@ const EditProfile = ({ match }) => {
             value={userData.password}
             onChange={handleChange}
             required
-            style={{width:"400px"}}
+            style={{ width: "400px" }}
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">Save Changes</Button>
+        <Button variant="primary" type="submit">
+          Save Changes
+        </Button>
       </Form>
     </Container>
   );
 };
 
 export default EditProfile;
+
