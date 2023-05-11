@@ -1,23 +1,22 @@
-import React,{ useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Container, Row, Col, Button } from "react-bootstrap";
 
 const Dashboard = () => {
   const [userCount, setUserCount] = useState(0);
 
   useEffect(() => {
-    // Fetch user count from API or data source
     const fetchUserCount = async () => {
       try {
-        // Make an API request to fetch user count
-        const response = await fetch('/api/users/count');
+        const response = await fetch(
+          "https://645cf892250a246ae313d573.mockapi.io/api/users/user"
+        );
         const data = await response.json();
-        setUserCount(data.count); // Set the fetched user count
+        setUserCount(data.length);
       } catch (error) {
-        console.error('Error fetching user count:', error);
+        console.error("Error fetching user count:", error);
       }
     };
-
     fetchUserCount();
   }, []);
 
@@ -33,9 +32,8 @@ const Dashboard = () => {
           <h3>Total Users</h3>
           <h3>{userCount}</h3>
         </Col>
-        {/* Add more dashboard cards */}
       </Row>
-      <Row className='mt-5'> 
+      <Row className="mt-5">
         <Col>
           <Link to="/users">
             <Button variant="primary">List Users</Button>
@@ -52,3 +50,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
