@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
+import {useParams}  from "react-router-dom"
 
-const EditUser = ({ match }) => {
-  const userId = match.params.id;
-
+const EditUser = () => {
+  let { id } = useParams();
   const [userData, setUserData] = useState({
     name: '',
     email: '',
@@ -11,20 +11,17 @@ const EditUser = ({ match }) => {
   });
 
   useEffect(() => {
-    // Fetch user data from API or data source
     const fetchUserData = async () => {
       try {
-        // Make an API request to fetch user data
-        const response = await fetch(`/api/users/${userId}`);
+        const response = await fetch(`https://645cf892250a246ae313d573.mockapi.io/api/users/user/${id}`);
         const data = await response.json();
-        setUserData(data); // Set the fetched user data
+        setUserData(data); 
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
-
     fetchUserData();
-  }, [userId]);
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,16 +31,29 @@ const EditUser = ({ match }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission to update the user's data
-    console.log(userData);
-    // Reset form fields
-    setUserData({
-      name: '',
-      email: '',
-      password: ''
-    });
+    try {
+      const response = await fetch(`https://645cf892250a246ae313d573.mockapi.io/api/users/user/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+      if (response.ok) {
+        alert("User updated successfully")
+        setUserData({
+          name: '',
+          email: '',
+          password: ''
+        });
+      } else {
+        console.error('Error updating user');
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
   };
 
   return (
@@ -94,3 +104,4 @@ const EditUser = ({ match }) => {
 };
 
 export default EditUser;
+
