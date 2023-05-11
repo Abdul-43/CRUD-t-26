@@ -1,23 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
-import {useParams}  from "react-router-dom"
+import React, { useState, useEffect } from "react";
+import { Container, Form, Button } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditUser = () => {
   let { id } = useParams();
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    password: ''
+    name: "",
+    email: "",
+    password: "",
   });
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`https://645cf892250a246ae313d573.mockapi.io/api/users/user/${id}`);
+        const response = await fetch(
+          `https://645cf892250a246ae313d573.mockapi.io/api/users/user/${id}`
+        );
         const data = await response.json();
-        setUserData(data); 
+        setUserData(data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
     fetchUserData();
@@ -27,37 +30,37 @@ const EditUser = () => {
     const { name, value } = e.target;
     setUserData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://645cf892250a246ae313d573.mockapi.io/api/users/user/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-      });
+      const response = await fetch(
+        `https://645cf892250a246ae313d573.mockapi.io/api/users/user/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
       if (response.ok) {
-        alert("User updated successfully")
-        setUserData({
-          name: '',
-          email: '',
-          password: ''
-        });
+        alert("User updated successfully");
+        navigate("/users")
+        
       } else {
-        console.error('Error updating user');
+        console.error("Error updating user");
       }
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
     }
   };
 
   return (
-    <Container className='mt-0'>
+    <Container className="mt-0">
       <h1>Edit User</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formName">
@@ -68,9 +71,8 @@ const EditUser = () => {
             value={userData.name}
             onChange={handleChange}
             required
-            style={{width:"400px"}}
+            style={{ width: "400px" }}
           />
-
         </Form.Group>
 
         <Form.Group controlId="formEmail">
@@ -81,7 +83,7 @@ const EditUser = () => {
             value={userData.email}
             onChange={handleChange}
             required
-            style={{width:"400px"}}
+            style={{ width: "400px" }}
           />
         </Form.Group>
 
@@ -93,15 +95,18 @@ const EditUser = () => {
             value={userData.password}
             onChange={handleChange}
             required
-            style={{width:"400px"}}
+            style={{ width: "400px" }}
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">Save Changes</Button>
+        <Button variant="primary" type="submit">
+          Save Changes
+        </Button>
       </Form>
     </Container>
   );
 };
 
 export default EditUser;
+
 
