@@ -16,16 +16,31 @@ const CreateUser = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission to create a new user
-    console.log(userData);
-    // Reset form fields
-    setUserData({
-      name: '',
-      email: '',
-      password: ''
-    });
+    try {
+      const response = await fetch('https://645cf892250a246ae313d573.mockapi.io/api/users/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+      if (response.ok) {
+        // User created successfully
+        console.log('User created successfully');
+        // Reset form fields
+        setUserData({
+          name: '',
+          email: '',
+          password: ''
+        });
+      } else {
+        console.error('Error creating user');
+      }
+    } catch (error) {
+      console.error('Error creating user:', error);
+    }
   };
 
   return (
@@ -77,3 +92,4 @@ const CreateUser = () => {
 };
 
 export default CreateUser;
+
